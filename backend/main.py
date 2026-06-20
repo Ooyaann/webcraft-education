@@ -64,6 +64,16 @@ async def startup_db_initialization():
             print("Migrasi: Kolom 'materi_list_json' berhasil ditambahkan ke tabel 'pertemuan'.")
         except Exception as e:
             print("Pertemuan migration skipped/already exists:", e)
+
+    # ==================== EKSEKUSI SEED DI SINI ====================
+    try:
+        print("Memulai proses seeding data otomatis...")
+        from seed import seed  # Mengimpor fungsi seed dari file seed.py di root backend
+        await seed()
+        print("Proses seeding selesai dijalankan dengan aman!")
+    except Exception as e:
+        print("Gagal menjalankan seeding otomatis:", e)
+    # ===============================================================
             
     print("Database berhasil diinisialisasi & tabel-tabel berhasil dibuat!")
 
