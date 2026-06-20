@@ -8,14 +8,22 @@ from app.models import User, Room, Pertemuan, LearningTask, ProjectTask, room_me
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 async def seed():
-    async with engine.begin() as conn:
-        print("Purging database...")
-        await conn.run_sync(Base.metadata.drop_all)
-        print("Creating tables...")
-        await conn.run_sync(Base.metadata.create_all)
+    #async with engine.begin() as conn:
+        #print("Purging database...")
+        #await conn.run_sync(Base.metadata.drop_all)
+        #print("Creating tables...")
+        #await conn.run_sync(Base.metadata.create_all)
 
     async with AsyncSessionLocal() as session:
         print("Seeding database...")
+
+        # Cek dulu apakah data sudah ada agar tidak duplikat saat restart server
+        result = await session.execute(select(User).filter_by(email="andi@siswa.com"))
+        existing_user = result.scalar_one_or_none()
+        
+        if existing_user:
+            print("Database sudah terisi data seed. Proses seeding dilewati.")
+            return
         
         # 1. Seed Users (1 Guru, 1 Siswa)
         users_to_seed = [
