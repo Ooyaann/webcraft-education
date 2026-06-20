@@ -2,15 +2,16 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Copy requirements.txt dari dalam folder backend ke kontainer
+# Salin kebutuhan library
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy seluruh isi folder backend ke dalam kontainer
+# Salin semua isi backend
 COPY backend/ .
 
-# Hugging Face wajib pakai port 7860
+# Beri tahu Hugging Face secara tegas bahwa kita pakai port 7860
+ENV PORT=7860
 EXPOSE 7860
 
-# Jalankan uvicorn mengarah ke main.py yang sekarang sudah di root kontainer
+# Jalankan FastAPI dengan port yang dinamis sesuai bawaan Hugging Face
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "7860"]
